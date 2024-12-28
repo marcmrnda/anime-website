@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagination with Static API Link</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.css">
+  <style>
+    #data-container {
+      margin: 20px 0;
+    }
+    .data-item {
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 5px;
+    }
+    #pagination-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pagination with Static API Link</h1>
+  <div id="data-container"></div>
+  <div id="pagination-container"></div>
+
+  <script>
+    $(document).ready(function () {
+      const apiURL = 'https://jsonplaceholder.typicode.com/posts'; // Static API Link
+
+      // Fetch data from the static API
+      fetch(apiURL)
+        .then(response => response.json())
+        .then(data => {
+          // Initialize Pagination.js with fetched data
+          $('#pagination-container').pagination({
+            dataSource: data,
+            pageSize: 20, // Number of items per page
+            callback: function (data, pagination) {
+              // Render data for the current page
+              const html = data.map(item => `
+                <div class="data-item">
+                  <h3>${item.title}</h3>
+                  <p>${item.body}</p>
+                </div>
+              `).join('');
+              $('#data-container').html(html);
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          $('#data-container').html('<p>Error loading data.</p>');
+        });
+    });
+  </script>
+</body>
+</html>
